@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+{% block title %}Hisse Sat{% endblock %}
+
+{% block content %}
+<h2>{{ stock.name }} Hissesi Sat</h2>
+<p>Fiyat: {{ stock.price }} TL</p>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="quantity" class="form-label">Adet</label>
+        <input type="number" name="quantity" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-danger">Sat</button>
+</form>
+
+<a href="{% url 'core:portfolio' %}" class="btn btn-secondary mt-2">Geri Dön</a>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Portföyüm</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Nakit Bakiye</h5>
+                <p class="card-text h4">{{ portfolio.balance|floatformat:2 }} TL</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Yatırım Değeri</h5>
+                <p class="card-text h4">{{ total_investment|floatformat:2 }} TL</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Toplam Varlık</h5>
+                <p class="card-text h4">{{ total_assets|floatformat:2 }} TL</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3>Hisse Pozisyonlarım</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Hisse</th>
+            <th>Adet</th>
+            <th>Ort. Alış (TL)</th>
+            <th>Güncel Fiyat (TL)</th>
+            <th>Değer (TL)</th>
+            <th>Kar/Zarar (TL)</th>
+            <th>İşlem</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for holding in holdings %}
+        <tr>
+            <td>{{ holding.stock.symbol }} - {{ holding.stock.name }}</td>
+            <td>{{ holding.quantity }}</td>
+            <td>{{ holding.average_buy_price|floatformat:2 }}</td>
+            <td>{{ holding.stock.current_price|floatformat:2 }}</td>
+            <td>{{ holding.current_value|floatformat:2 }}</td>
+            <td class="{% if holding.stock.current_price > holding.average_buy_price %}text-success{% else %}text-danger{% endif %}">
+                {{ holding.profit_loss|floatformat:2 }}
+            </td>
+            <td>
+                <form method="post" action="{% url 'core:sell_stock' holding.stock.id %}" class="row g-2">
+                    {% csrf_token %}
+                    <div class="col-auto">
+                        <input type="number" name="quantity" min="1" max="{{ holding.quantity }}" value="1" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-danger btn-sm">Sat</button>
+                    </div>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" class="text-center">Portföyünüzde hisse bulunmamaktadır</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

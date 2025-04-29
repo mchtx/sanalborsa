@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kayıt Ol | Sanal Borsa</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .register-container {
+      max-width: 500px;
+      margin: 80px auto;
+      padding: 30px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border-top: 4px solid #343a40;
+    }
+    footer {
+      background-color: #343a40;
+      color: white;
+      padding: 20px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
+  <div class="container">
+    <a class="navbar-brand" href="#">Sanal Borsa</a>
+  </div>
+</nav>
+
+<!-- Register Form -->
+<div class="container">
+  <div class="register-container">
+    <h2 class="text-center mb-4">Kayıt Ol</h2>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="mb-3">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.errors %}
+            <div class="text-danger">
+              {% for error in field.errors %}
+                {% if "çok benzer" not in error and "en az 8 karakter" not in error and "yaygın" not in error and "tamamıyla sayısal" not in error %}
+                  {{ error }}
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-dark w-100">Kayıt Ol</button>
+    </form>
+    <div class="text-center mt-3">
+      <p>Zaten bir hesabınız var mı? <a href="{% url 'login' %}">Giriş Yap</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <p class="mb-0">© 2025 Sanal Borsa | Tüm Hakları Saklıdır.</p>
+  </div>
+</footer>
+
+</body>
+</html>

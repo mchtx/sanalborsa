@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<h2>Lider Tablosu</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Sıra</th>
+            <th>Kullanıcı</th>
+            <th>Toplam Varlık (TL)</th>
+            <th>Nakit (TL)</th>
+            <th>Yatırım (TL)</th>
+            <th>Kar/Zarar (TL)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in leaderboard %}
+        <tr class="{% if user.user == request.user.username %}table-primary{% endif %}">
+            <td>{{ forloop.counter }}</td>
+            <td>{{ user.user }}</td>
+            <td>{{ user.total_assets|floatformat:2 }}</td>
+            <td>{{ user.balance|floatformat:2 }}</td>
+            <td>{{ user.investment_value|floatformat:2 }}</td>
+            <td class="{% if user.profit_loss >= 0 %}text-success{% else %}text-danger{% endif %}">
+                {{ user.profit_loss|floatformat:2 }}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
